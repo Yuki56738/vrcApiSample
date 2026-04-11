@@ -9,7 +9,7 @@ from vrchatapi.models import *
 from vrchatapi.configuration import *
 
 def initializeCredentials(CREDS_FILE: str):
-    CREDS_FILE = "credentials.json"
+    CREDS_FILE = "credentials.json" #Default value for CREDS_FILE var
     global VRC_USERNAME, VRC_PASSWORD
 
     VRC_USERNAME = ""
@@ -18,7 +18,6 @@ def initializeCredentials(CREDS_FILE: str):
         CREDS = json.loads(f.read())
         VRC_USERNAME = CREDS["VRC_USERNAME"]
         VRC_PASSWORD = CREDS["VRC_PASSWORD"]
-        # f.close()
 
 def main():
     initializeCredentials("credentials.json")
@@ -32,7 +31,6 @@ def main():
 
     auth_api = authentication_api.AuthenticationApi(api_client)
     try:
-        # current_user1 = auth_api.get_current_user()
         current_user1 = auth_api.get_current_user()
     except UnauthorizedException as e:
         if e.status == 200:
