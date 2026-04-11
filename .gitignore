@@ -164,3 +164,8 @@ cython_debug/
 
 credential*.json
 
+.idea/
+
+.idea
+
+
