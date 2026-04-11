@@ -47,5 +47,7 @@ def main():
 def greeting(auth_api: authentication_api.AuthenticationApi):
     print(f'Logged in as: {auth_api.get_current_user()}')
 
+def wait1min():
+    pass
 if __name__ == '__main__':
     main()
