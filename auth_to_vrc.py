@@ -1,4 +1,6 @@
 import json
+from time import sleep
+
 import vrchatapi
 from vrchatapi.api import *
 from vrchatapi.exceptions import *
@@ -59,6 +61,7 @@ def authAndStoreCookie():
             f.writelines(json.JSONEncoder().encode(cookies_to_save))
         # print("auth: " + cookie_jar["auth"].value)
         # print("twoFactorAuth: " + cookie_jar["twoFactorAuth"].value)
+    return api_client
 
 def makeCookie(name, value):
     return Cookie(0, name, value,
@@ -92,7 +95,9 @@ def loadCookieAndAuth():
         auth_api = authentication_api.AuthenticationApi(api_client)
         current_user = auth_api.get_current_user()
         print("Logged in with saved cookies as:", current_user.display_name)
+    return api_client
 
+def wait1min():
+    print('Waiting 1 minutes...')
+    sleep(60)
 
-# authAndStoreCookie()
-loadCookieAndAuth()
