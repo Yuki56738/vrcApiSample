@@ -98,5 +98,6 @@ def loadCookieAndAuth():
     return api_client
 
 def wait1min():
+    print('Waiting 1 minutes...')
     sleep(60)
 
