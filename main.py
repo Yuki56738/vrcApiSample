@@ -1,6 +1,8 @@
 import json
+from http.cookiejar import LWPCookieJar
 from time import sleep
 
+import requests
 import vrchatapi
 from vrchatapi import *
 from vrchatapi import configuration
@@ -12,6 +14,8 @@ from vrchatapi.configuration import *
 # Global variables for VRC credentials
 VRC_USERNAME = ""
 VRC_PASSWORD = ""
+api_client = None
+COOKIE_FILE = 'vrc_session.pkl'
 
 def initializeCredentials(CREDS_FILE: str):
     global VRC_USERNAME, VRC_PASSWORD
@@ -20,8 +24,28 @@ def initializeCredentials(CREDS_FILE: str):
         CREDS = json.loads(f.read())
         VRC_USERNAME = CREDS["VRC_USERNAME"]
         VRC_PASSWORD = CREDS["VRC_PASSWORD"]
+def get_or_create_session():
+    session = requests.Session()
+    cookie_jar = LWPCookieJar(COOKIE_FILE)
+
+    try:
+        cookie_jar.load(ignore_discard=True, ignore_expires=True)
+        session.cookies = cookie_jar
+        print('loaded existing cookies')
+        return session
+    except FileNotFoundError:
+        print('creating new cookies...')
+        session.cookies = cookie_jar
+        return session
+
+def save_session(session):
+    if isinstance(session.cookies, LWPCookieJar):
+        session.cookies.save(ignore_discard=True, ignore_expires=True)
+        print(f'saved existing cookies. {COOKIE_FILE}')
 
 def main():
+    global api_client
+
     initializeCredentials("credentials.json")
 
     configuration = vrchatapi.configuration.Configuration(
@@ -67,13 +91,8 @@ def main():
     with open('data-of-myself.txt', 'w') as f:
         f.write(str(current_user1_obj))
 
-    # export_myself_data(current_user1, api_client)
-    # get_all_of_my_data(auth_api)
-
     wait1min()
 
-def export_myself_data(current_user: vrchatapi.User, api_client: vrchatapi.ApiClient):
-    pass
 def wait1min():
     print('Waiting 1 minute...')
     sleep(60)
