@@ -60,6 +60,13 @@ def main():
 
     print(f'Logged in as: {current_user1.username} ID: {current_user1.id}')
 
+    #export all of my data in vrc
+    current_user1:User = current_user1
+    users_api = UsersApi(api_client)
+    current_user1_obj = users_api.get_user(current_user1.id)
+    with open('data-of-myself.txt', 'w') as f:
+        f.write(str(current_user1_obj))
+
     # export_myself_data(current_user1, api_client)
     # get_all_of_my_data(auth_api)
 
