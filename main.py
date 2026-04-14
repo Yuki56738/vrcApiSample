@@ -44,23 +44,32 @@ def main():
             print(f'Auth failed. reason: {e.reason}')
     except vrchatapi.ApiException as e:
         print(f'API Error: {e}')
-    greeting(auth_api)
 
+    current_user1 = greeting(auth_api)
+
+    export_myself_data(current_user1, api_client)
     # get_all_of_my_data(auth_api)
 
     wait1min()
 
-def get_all_of_my_data(auth_api: AuthenticationApi):
-    print('getting all my data...')
-    current_user1 = auth_api.get_current_user()
-    user_api1 = UsersApi(auth_api)
-    result1 = user_api1.get_user(current_user1.id)
-    with open('my_data.json', 'w') as f:
-        f.write(json.dumps(result1))
+def export_myself_data(current_user: vrchatapi.User, api_client: vrchatapi.ApiClient):
+    print('Exporting myself data...')
+    users_api1 = vrchatapi.UsersApi(api_client)
+    data_of_myself = users_api1.get_user(current_user.id)
+    print(data_of_myself)
+    print('exporting myself data...')
+    with open('myself_data.json', 'w') as f:
+        try:
+            f.write(json.dumps(data_of_myself))
+        except Exception as e:
+            print(f'failed to export myself data. exception: {e}')
 
-def greeting(auth_api: authentication_api.AuthenticationApi):
+
+
+def greeting(auth_api: authentication_api.AuthenticationApi) -> User:
     current_user1 = auth_api.get_current_user()
     print(f'Logged in as: {current_user1.username} ID: {current_user1.id}')
+    return current_user1
 
 def wait1min():
     print('Waiting 1 minute...')
