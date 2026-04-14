@@ -175,3 +175,4 @@ credential*.json
 /data-of-myself.txt
 /myself_data.json
 /vrc_session.pkl
+/cookies.json
