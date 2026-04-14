@@ -32,22 +32,27 @@ def main():
 
     auth_api = authentication_api.AuthenticationApi(api_client)
     try:
-        current_user1 = auth_api.get_current_user()
-    except UnauthorizedException as e:
-        if e.status == 200:
-            if '2 Factor Authentication' in e.reason:
-                auth_api.verify2_fa(two_factor_auth_code=TwoFactorAuthCode(input('Enter the 2FA code...')))
-            else:
-                auth_api.verify2_fa_email_code(two_factor_email_code=TwoFactorEmailCode(input('Enter the 2FA code you got from E-mail...')))
-
-        else:
-            print(f'Auth failed. reason: {e.reason}')
-    except vrchatapi.ApiException as e:
-        print(f'API Error: {e}')
+        auth_api.verify2_fa(two_factor_auth_code=TwoFactorAuthCode(input('Enter the 2FA code...')))
+    except Exception as e:
+        print(f'failed to verify 2FA code. exception: {e}')
+        return
+    # try:
+    #     current_user1 = auth_api.get_current_user()
+    # except UnauthorizedException as e:
+    #     if e.status == 200:
+    #         if '2 Factor Authentication' in e.reason:
+    #             auth_api.verify2_fa(two_factor_auth_code=TwoFactorAuthCode(input('Enter the 2FA code...')))
+    #         else:
+    #             auth_api.verify2_fa_email_code(two_factor_email_code=TwoFactorEmailCode(input('Enter the 2FA code you got from E-mail...')))
+    #
+    #     else:
+    #         print(f'Auth failed. reason: {e.reason}')
+    # except vrchatapi.ApiException as e:
+    #     print(f'API Error: {e}')
 
     current_user1 = greeting(auth_api)
 
-    export_myself_data(current_user1, api_client)
+    # export_myself_data(current_user1, api_client)
     # get_all_of_my_data(auth_api)
 
     wait1min()
