@@ -58,9 +58,9 @@ def export_myself_data(current_user: vrchatapi.User, api_client: vrchatapi.ApiCl
     data_of_myself = users_api1.get_user(current_user.id)
     print(data_of_myself)
     print('exporting myself data...')
-    with open('myself_data.json', 'w') as f:
+    with open('myself_data.txt', 'w') as f:
         try:
-            f.write(json.dumps(data_of_myself))
+            f.write(str(data_of_myself))
         except Exception as e:
             print(f'failed to export myself data. exception: {e}')
 
