@@ -57,6 +57,7 @@ def main():
     )
     api_client = vrchatapi.ApiClient(configuration)
     # api_client.rest_client.pool_manager.connection_pool_kw['session'] = session
+    api_client.rest_client.session = session
     api_client.user_agent = f'Mozilla/5.0 {VRC_USERNAME}'  # Optional: uncomment if needed
 
     auth_api = authentication_api.AuthenticationApi(api_client)
