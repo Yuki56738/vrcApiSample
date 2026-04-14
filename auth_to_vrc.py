@@ -1,4 +1,6 @@
 import json
+from time import sleep
+
 import vrchatapi
 from vrchatapi.api import *
 from vrchatapi.exceptions import *
@@ -95,4 +97,6 @@ def loadCookieAndAuth():
         print("Logged in with saved cookies as:", current_user.display_name)
     return api_client
 
-# authAndStoreCookie()
+def wait1min():
+    sleep(60)
+
