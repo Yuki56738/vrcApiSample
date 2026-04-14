@@ -101,3 +101,6 @@ def wait1min():
     print('Waiting 1 minutes...')
     sleep(60)
 
+if __name__ == '__main__':
+    authAndStoreCookie()
+    wait1min()
