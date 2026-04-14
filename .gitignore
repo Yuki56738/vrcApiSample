@@ -169,3 +169,5 @@ credential*.json
 .idea
 
 
+/myself_data.json
+/data-of-myself.txt
