@@ -1,4 +1,5 @@
 import json
+from time import sleep
 
 import vrchatapi
 from vrchatapi import *
@@ -44,10 +45,25 @@ def main():
     except vrchatapi.ApiException as e:
         print(f'API Error: {e}')
     greeting(auth_api)
+
+    # get_all_of_my_data(auth_api)
+
+    wait1min()
+
+def get_all_of_my_data(auth_api: AuthenticationApi):
+    print('getting all my data...')
+    current_user1 = auth_api.get_current_user()
+    user_api1 = UsersApi(auth_api)
+    result1 = user_api1.get_user(current_user1.id)
+    with open('my_data.json', 'w') as f:
+        f.write(json.dumps(result1))
+
 def greeting(auth_api: authentication_api.AuthenticationApi):
-    print(f'Logged in as: {auth_api.get_current_user()}')
+    current_user1 = auth_api.get_current_user()
+    print(f'Logged in as: {current_user1.username} ID: {current_user1.id}')
 
 def wait1min():
-    pass
+    print('Waiting 1 minute...')
+    sleep(60)
 if __name__ == '__main__':
     main()
