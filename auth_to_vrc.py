@@ -95,7 +95,7 @@ def loadCookieAndAuth():
         auth_api = authentication_api.AuthenticationApi(api_client)
         current_user = auth_api.get_current_user()
         print("Logged in with saved cookies as:", current_user.display_name)
-    return api_client
+    return auth_api
 
 def wait1min():
     print('Waiting 1 minutes...')
