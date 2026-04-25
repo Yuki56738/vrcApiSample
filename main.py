@@ -7,8 +7,8 @@ from vrchatapi.api.friends_api import *
 def main():
     print('Welcome to the UNDERGROUND...')
     auth_api = AuthWithSavedCookie()
-    current_user = auth_api.get_current_user()
-    if current_user is None:
+    # current_user = auth_api.get_current_user()
+    if not auth_api:
         print(f'Failed to authenticate with VRChat API.')
         print('Trying with new session...')
         auth_api = authAndStoreCookie()

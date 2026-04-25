@@ -10,6 +10,14 @@ from vrchatapi.models.two_factor_email_code import *
 from http.cookiejar import Cookie
 from vrchatapi.api import authentication_api
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.StreamHandler(),
+                        logging.FileHandler('api.log'),
+                    ])
+
 # Global variables for VRC credentials
 VRC_USERNAME = ""
 VRC_PASSWORD = ""
@@ -83,21 +91,31 @@ def AuthWithSavedCookie():
         username=VRC_USERNAME,
         password=VRC_PASSWORD,
     )
-
-    with open('cookies.json', 'r') as f:
-        cookies_to_saved = {}
-        cookies_to_saved.update(json.JSONDecoder().decode(f.read()))
-
+    try:
+        with open('cookies.json', 'r') as f:
+            cookies_to_saved = {}
+            cookies_to_saved.update(json.JSONDecoder().decode(f.read()))
+    except FileNotFoundError:
+        logging.error('cookies.json not found')
+        return False
+    logging.info('authenticating with saved cookies...')
     with vrchatapi.ApiClient(configuration) as api_client:
-        api_client.rest_client.cookie_jar.set_cookie(
-            makeCookie('auth', cookies_to_saved.get("auth")))
-        api_client.rest_client.cookie_jar.set_cookie(
-            makeCookie('twoFactorAuth', cookies_to_saved.get("2fa")))
-        api_client.user_agent = API_USER_AGENT
-
-        auth_api = authentication_api.AuthenticationApi(api_client)
-        current_user = auth_api.get_current_user()
-        print("Logged in with saved cookies as:", current_user.display_name)
+        try:
+            api_client.rest_client.cookie_jar.set_cookie(
+                makeCookie('auth', cookies_to_saved.get("auth")))
+            api_client.rest_client.cookie_jar.set_cookie(
+                makeCookie('twoFactorAuth', cookies_to_saved.get("2fa")))
+            api_client.user_agent = API_USER_AGENT
+        except Exception as e:
+            logging.error(f"Exception when calling AuthenticationApi with saved cookies: {e}")
+            return False
+        try:
+            auth_api = authentication_api.AuthenticationApi(api_client)
+            current_user = auth_api.get_current_user()
+            logging.info(f"Logged in with saved cookies as: {current_user.display_name}")
+        except Exception as e:
+            logging.error(f"Exception when calling AuthenticationApi with saved cookies: {e}")
+            return False
     return auth_api
 
 
@@ -105,4 +123,5 @@ def wait1min():
     print('Waiting 1 minutes...')
     sleep(60)
 
-
+if __name__ == '__main__':
+    AuthWithSavedCookie()
