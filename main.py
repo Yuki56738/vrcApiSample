@@ -20,12 +20,11 @@ logging.getLogger('requests').setLevel(logging.DEBUG)
 
 def main():
     print('Welcome to the UNDERGROUND...')
-
+    logging.info('Logging into VRChat API...')
     auth_api = AuthWithSavedCookie()
     # current_user = auth_api.get_current_user()
     if not auth_api:
-        print(f'Failed to authenticate with VRChat API.')
-        print('Trying with new session...')
+        logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
         auth_api = authAndStoreCookie()
         current_user = auth_api.get_current_user()
         print("Logged in as:", current_user.display_name)
