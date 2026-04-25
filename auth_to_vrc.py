@@ -53,6 +53,7 @@ def authAndStoreCookie():
         try:
             current_user = auth_api.get_current_user()
         except UnauthorizedException as e:
+            logging.debug(f'api res body: {e.body}')
             if e.status == 200:
                 if "Email 2 Factor Authentication" in e.reason:
                     auth_api.verify2_fa_email_code(two_factor_email_code=TwoFactorEmailCode(input("Email 2FA Code: ")))
