@@ -14,6 +14,7 @@ from vrchatapi.api import authentication_api
 VRC_USERNAME = ""
 VRC_PASSWORD = ""
 
+
 def initializeCredentials(CREDS_FILE: str):
     global VRC_USERNAME, VRC_PASSWORD
 
@@ -30,7 +31,6 @@ def authAndStoreCookie():
         username=VRC_USERNAME,
         password=VRC_PASSWORD,
     )
-
 
     with vrchatapi.ApiClient(configuration) as api_client:
         api_client.user_agent = f'Mozilla/5.0 {VRC_USERNAME}'
@@ -59,9 +59,8 @@ def authAndStoreCookie():
             }
             print('saving cookies to file...')
             f.writelines(json.JSONEncoder().encode(cookies_to_save))
-        # print("auth: " + cookie_jar["auth"].value)
-        # print("twoFactorAuth: " + cookie_jar["twoFactorAuth"].value)
     return api_client
+
 
 def makeCookie(name, value):
     return Cookie(0, name, value,
@@ -74,6 +73,7 @@ def makeCookie(name, value):
                   None,
                   None, {})
 
+
 def loadCookieAndAuth():
     initializeCredentials("credentials.json")
 
@@ -83,7 +83,7 @@ def loadCookieAndAuth():
     )
 
     with open('cookies.json', 'r') as f:
-        cookies_to_saved ={}
+        cookies_to_saved = {}
         cookies_to_saved.update(json.JSONDecoder().decode(f.read()))
 
     with vrchatapi.ApiClient(configuration) as api_client:
@@ -97,9 +97,11 @@ def loadCookieAndAuth():
         print("Logged in with saved cookies as:", current_user.display_name)
     return auth_api
 
+
 def wait1min():
     print('Waiting 1 minutes...')
     sleep(60)
+
 
 if __name__ == '__main__':
     authAndStoreCookie()
