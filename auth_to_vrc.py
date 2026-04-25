@@ -17,6 +17,10 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
                         logging.StreamHandler(),
                         logging.FileHandler('api.log'),
                     ])
+logging.getLogger('urllib3').setLevel(logging.DEBUG)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
+logging.getLogger('requests').setLevel(logging.DEBUG)
+
 
 # Global variables for VRC credentials
 VRC_USERNAME = ""
