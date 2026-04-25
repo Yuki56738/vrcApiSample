@@ -74,7 +74,7 @@ def authAndStoreCookie():
             }
             print('saving cookies to file...')
             f.writelines(json.JSONEncoder().encode(cookies_to_save))
-    return api_client
+    return auth_api
 
 
 def makeCookie(name, value):
