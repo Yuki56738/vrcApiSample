@@ -4,6 +4,8 @@ from vrchatapi import api_client
 from auth_to_vrc import *
 from vrchatapi.api import *
 from vrchatapi.api.friends_api import *
+from vrchatapi.models.friend_status import *
+from vrchatapi.models import *
 
 import logging
 
@@ -33,26 +35,46 @@ def main():
 
         current_user = auth_api.get_current_user()
         print("Logged in as:", current_user.display_name)
-    get_online_friends(auth_api ,current_user)
+    # friends = get_online_friends(auth_api ,current_user)
+    # for friend in friends:
+    #     friend: LimitedUserFriend
+    #     # print(friend.status, friend.display_name)
+    #     if not friend.platform == 'web':
+    #         print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
+    #         print(f'')
+
     wait1min()
 
 def get_online_friends(auth_api: AuthenticationApi ,current_user: CurrentUser):
     logging.info('Getting online friends...')
     try:
         current_user.user_agent = API_USER_AGENT
-        friends:list = current_user.online_friends
-        logging.info('writing online friends to file...')
+
+        api_client = auth_api.api_client
+        # api_client.user_agent = API_USER_AGENT
+        api_client.user_agent = API_USER_AGENT
+        friends_api = FriendsApi(api_client)
+        # friends = friends_api.get_friends()
+        friends = friends_api.get_friends(offline=False)
+        logging.info('writing friends to file friends-online.txt...')
         with open('friends-online.txt', 'w') as f:
             f.writelines(str(friends))
+        logging.info(f'You have {len(friends)} online friends')
+        return friends
+        # for x in friends:
+        #     print(x.id, x.display_name)
+        # friends:list = current_user.online_friends
+        # logging.info('writing online friends to file...')
+        # with open('friends-online.txt', 'w') as f:
+        #     f.writelines(str(friends))
     except Exception as e:
         logging.error(f'Failed to get online friends: {e}')
         return e
+    # api_client = auth_api.api_client
+    # for x in friends:
+    #     print(x)
+    #     print(x.display_name)
 
-    friends_api = FriendsApi(auth_api)
-    for x in friends:
-        print(x)
-
-    return friends
 
 
 
