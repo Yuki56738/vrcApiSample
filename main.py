@@ -5,7 +5,7 @@ from auth_to_vrc import *
 
 def main():
     print('Welcome to the UNDERGROUND...')
-    auth_api = loadCookieAndAuth()
+    auth_api = AuthWithSavedCookie()
     current_user = auth_api.get_current_user()
     if current_user is None:
         print(f'Failed to authenticate with VRChat API.')

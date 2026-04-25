@@ -74,7 +74,7 @@ def makeCookie(name, value):
                   None, {})
 
 
-def loadCookieAndAuth():
+def AuthWithSavedCookie():
     initializeCredentials("credentials.json")
 
     configuration = vrchatapi.Configuration(
@@ -104,5 +104,4 @@ def wait1min():
 
 
 if __name__ == '__main__':
-    authAndStoreCookie()
-    wait1min()
+    pass
