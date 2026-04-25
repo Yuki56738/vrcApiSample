@@ -4,8 +4,23 @@ from vrchatapi import api_client
 from auth_to_vrc import *
 from vrchatapi.api import *
 from vrchatapi.api.friends_api import *
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.StreamHandler(),
+                        logging.FileHandler('app.log'),
+                    ])
+logging.getLogger('urllib3').setLevel(logging.DEBUG)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
+logging.getLogger('requests').setLevel(logging.DEBUG)
+
+
+
 def main():
     print('Welcome to the UNDERGROUND...')
+
     auth_api = AuthWithSavedCookie()
     # current_user = auth_api.get_current_user()
     if not auth_api:
