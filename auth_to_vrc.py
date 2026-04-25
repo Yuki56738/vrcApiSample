@@ -14,6 +14,7 @@ from vrchatapi.api import authentication_api
 VRC_USERNAME = ""
 VRC_PASSWORD = ""
 
+API_USER_AGENT = "VrcApiAppForMe/0.1 contact@yukiito.dev"
 
 def initializeCredentials(CREDS_FILE: str):
     global VRC_USERNAME, VRC_PASSWORD
@@ -33,7 +34,8 @@ def authAndStoreCookie():
     )
 
     with vrchatapi.ApiClient(configuration) as api_client:
-        api_client.user_agent = f'Mozilla/5.0 {VRC_USERNAME}'
+        # api_client.user_agent = f'Mozilla/5.0 {VRC_USERNAME}'
+        api_client.user_agent = API_USER_AGENT
         auth_api = authentication_api.AuthenticationApi(api_client)
 
         try:
@@ -87,11 +89,12 @@ def AuthWithSavedCookie():
         cookies_to_saved.update(json.JSONDecoder().decode(f.read()))
 
     with vrchatapi.ApiClient(configuration) as api_client:
-        api_client.user_agent = f'Mozilla/5.0 {VRC_USERNAME}'
         api_client.rest_client.cookie_jar.set_cookie(
             makeCookie('auth', cookies_to_saved.get("auth")))
         api_client.rest_client.cookie_jar.set_cookie(
             makeCookie('twoFactorAuth', cookies_to_saved.get("2fa")))
+        api_client.user_agent = API_USER_AGENT
+
         auth_api = authentication_api.AuthenticationApi(api_client)
         current_user = auth_api.get_current_user()
         print("Logged in with saved cookies as:", current_user.display_name)
@@ -103,5 +106,3 @@ def wait1min():
     sleep(60)
 
 
-if __name__ == '__main__':
-    pass
