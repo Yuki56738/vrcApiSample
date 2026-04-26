@@ -41,8 +41,14 @@ def main():
     for friend in friends:
         friend: LimitedUserFriend
         # print(friend.status, friend.display_name)
-        if not friend.platform == 'web' and not friend.location == 'private':
+        if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline':
             print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
+            world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
+            print(f'in {world_obj.name}, {world_obj.tags}')
+            instance_obj = get_instance_obj(api_client=api_client, current_user=current_user, instance_id=friend.location)
+            print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)}')
+            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location).name}')
             # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)}')
 
 # def get_my_friends(api_client: ApiClient, current_user: CurrentUser):
@@ -52,9 +58,31 @@ def main():
 #Doesnt work
 def get_world_obj(api_client: ApiClient, current_user: CurrentUser, world_id: str) -> World:
     logging.debug('Getting world obj...')
+    text = world_id
+    match = re.match(r'^[^:]*', text)
+    world_real_id = match.group()
+    # instance_real_id = re.match(, world_id)
     worlds_api = WorldsApi(api_client)
-    world_obj = worlds_api.get_world(world_id=world_id)
+    world_obj = worlds_api.get_world(world_id=world_real_id)
+    logging.debug(f'Got world obj: {world_obj.name}')
     return world_obj
+
+#Doesnt work
+def get_instance_obj(api_client: ApiClient, current_user: CurrentUser, instance_id: str) -> Instance:
+    logging.debug('Getting instance obj...')
+    text = instance_id
+    match = re.search(r':(.*)$', text)
+    if match:
+        instance_real_id = match.group(1)
+    else:
+        return False
+    text = instance_id
+    match = re.match(r'^[^:]*', text)
+    world_real_id = match.group()
+
+    instances_api = InstancesApi(api_client)
+    instance_obj = instances_api.get_instance(world_id=world_real_id, instance_id=instance_real_id)
+    return instance_obj
 
 # def get_location_obj(world_id: str,instance_id: str, api_client: ApiClient, current_user: CurrentUser):
 #     logging.info('Getting location...')
