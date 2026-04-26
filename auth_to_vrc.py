@@ -129,4 +129,5 @@ def wait1min():
     sleep(60)
 
 if __name__ == '__main__':
-    AuthWithSavedCookie()
+    pass
+
