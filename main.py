@@ -35,15 +35,34 @@ def main():
 
         current_user = auth_api.get_current_user()
         print("Logged in as:", current_user.display_name)
-    # friends = get_online_friends(auth_api ,current_user)
-    # for friend in friends:
-    #     friend: LimitedUserFriend
-    #     # print(friend.status, friend.display_name)
-    #     if not friend.platform == 'web':
-    #         print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
-    #         print(f'')
+    api_client = auth_api.api_client
 
-    wait1min()
+    friends = get_online_friends(auth_api ,current_user)
+    for friend in friends:
+        friend: LimitedUserFriend
+        # print(friend.status, friend.display_name)
+        if not friend.platform == 'web' and not friend.location == 'private':
+            print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
+            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)}')
+
+# def get_my_friends(api_client: ApiClient, current_user: CurrentUser):
+#     logging.info('Getting my friends...')
+#     friends_api = FriendsApi(api_client)
+
+#Doesnt work
+def get_world_obj(api_client: ApiClient, current_user: CurrentUser, world_id: str) -> World:
+    logging.debug('Getting world obj...')
+    worlds_api = WorldsApi(api_client)
+    world_obj = worlds_api.get_world(world_id=world_id)
+    return world_obj
+
+# def get_location_obj(world_id: str,instance_id: str, api_client: ApiClient, current_user: CurrentUser):
+#     logging.info('Getting location...')
+#     instances_api = InstancesApi(api_client)
+#     ins: Instance = instances_api.get_instance(world_id=world_id ,instance_id=instance_id)
+#     logging.debug(ins.name)
+#     return ins
+
 
 def get_online_friends(auth_api: AuthenticationApi ,current_user: CurrentUser):
     logging.info('Getting online friends...')
