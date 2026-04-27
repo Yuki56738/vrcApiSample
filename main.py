@@ -37,25 +37,25 @@ def main():
         print("Logged in as:", current_user.display_name)
     api_client = auth_api.api_client
 
-    friends = get_online_friends(auth_api ,current_user)
+    friends = get_online_friends(auth_api, current_user)
     for friend in friends:
         friend: LimitedUserFriend
-        # print(friend.status, friend.display_name)
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline':
             print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
             world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
             print(f'in {world_obj.name}, {world_obj.tags}')
-            instance_obj = get_instance_obj(api_client=api_client, current_user=current_user, instance_id=friend.location)
+            instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
+                                            instance_id=friend.location)
             print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
-            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)}')
-            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location).name}')
-            # print(f'in {get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)}')
 
-# def get_my_friends(api_client: ApiClient, current_user: CurrentUser):
-#     logging.info('Getting my friends...')
-#     friends_api = FriendsApi(api_client)
 
-#Doesnt work
+def get_user_obj(api_client: ApiClient, user_id: str) -> User:
+    logging.debug('Getting user obj...')
+    users_api = UsersApi(api_client)
+    user_obj = users_api.get_user(user_id=user_id)
+    return user_obj
+
+
 def get_world_obj(api_client: ApiClient, current_user: CurrentUser, world_id: str) -> World:
     logging.debug('Getting world obj...')
     text = world_id
@@ -67,7 +67,7 @@ def get_world_obj(api_client: ApiClient, current_user: CurrentUser, world_id: st
     logging.debug(f'Got world obj: {world_obj.name}')
     return world_obj
 
-#Doesnt work
+
 def get_instance_obj(api_client: ApiClient, current_user: CurrentUser, instance_id: str) -> Instance:
     logging.debug('Getting instance obj...')
     text = instance_id
@@ -84,15 +84,8 @@ def get_instance_obj(api_client: ApiClient, current_user: CurrentUser, instance_
     instance_obj = instances_api.get_instance(world_id=world_real_id, instance_id=instance_real_id)
     return instance_obj
 
-# def get_location_obj(world_id: str,instance_id: str, api_client: ApiClient, current_user: CurrentUser):
-#     logging.info('Getting location...')
-#     instances_api = InstancesApi(api_client)
-#     ins: Instance = instances_api.get_instance(world_id=world_id ,instance_id=instance_id)
-#     logging.debug(ins.name)
-#     return ins
 
-
-def get_online_friends(auth_api: AuthenticationApi ,current_user: CurrentUser):
+def get_online_friends(auth_api: AuthenticationApi, current_user: CurrentUser):
     logging.info('Getting online friends...')
     try:
         current_user.user_agent = API_USER_AGENT
@@ -108,46 +101,8 @@ def get_online_friends(auth_api: AuthenticationApi ,current_user: CurrentUser):
             f.writelines(str(friends))
         logging.info(f'You have {len(friends)} online friends')
         return friends
-        # for x in friends:
-        #     print(x.id, x.display_name)
-        # friends:list = current_user.online_friends
-        # logging.info('writing online friends to file...')
-        # with open('friends-online.txt', 'w') as f:
-        #     f.writelines(str(friends))
     except Exception as e:
         logging.error(f'Failed to get online friends: {e}')
-        return e
-    # api_client = auth_api.api_client
-    # for x in friends:
-    #     print(x)
-    #     print(x.display_name)
-
-
-
-
-def get_online_friends_old(auth_api: AuthenticationApi, current_user: CurrentUser):
-    logging.info('Getting friends...')
-    try:
-        friends = current_user.friends
-        # friends = friends_api.get_friends()
-        with open('friends.txt', 'w') as f:
-            f.writelines(str(friends))
-    except Exception as e:
-        logging.error(f'Failed to get friends: {e}')
-        return e
-
-def get_friends(auth_api: AuthenticationApi, current_user: CurrentUser):
-    logging.info('Getting friends...')
-    try:
-
-        auth_api.user_agent = API_USER_AGENT
-
-        friends_api = FriendsApi(auth_api)
-        friends = friends_api.get_friends()
-        with open('friends-all.txt', 'w') as f:
-            f.writelines(str(friends))
-    except Exception as e:
-        logging.error(f'Failed to get friends: {e}')
         return e
 
 
