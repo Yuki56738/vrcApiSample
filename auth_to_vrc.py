@@ -14,10 +14,9 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[
-                        logging.StreamHandler(),
                         logging.FileHandler('api.log'),
                     ])
-logging.getLogger('urllib3').setLevel(logging.DEBUG)
+logging.getLogger('urllib3').setLevel(logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
 logging.getLogger('requests').setLevel(logging.DEBUG)
 
