@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 from vrchatapi import api_client
 from auth_to_vrc import *
@@ -47,6 +48,8 @@ def main():
             instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
                                             instance_id=friend.location)
             print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+            with open('online-friends-summary.txt', 'w') as f:
+                f.write(f'{datetime.datetime.now(tz=datetime.timezone.tzname("JST", 9 * 3600))}\n')
 
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
