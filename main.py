@@ -18,7 +18,6 @@ logging.getLogger('urllib3').setLevel(logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
 logging.getLogger('requests').setLevel(logging.DEBUG)
 
-
 API_USER_AGENT = "VrcApiAppForMe/0.1 contact@yukiito.dev"
 
 
@@ -27,17 +26,18 @@ def main():
     logging.info('Logging into VRChat API...')
     auth_api = AuthWithSavedCookie()
     auth_api.user_agent = API_USER_AGENT
-    current_user:CurrentUser = auth_api.get_current_user()
+    current_user: CurrentUser = auth_api.get_current_user()
     if not current_user:
         logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
         auth_api = authAndStoreCookie()
         auth_api.user_agent = API_USER_AGENT
 
         current_user = auth_api.get_current_user()
-        print("Logged in as:", current_user.display_name)
+
     api_client = auth_api.api_client
+    print(f'Logged in as: {current_user.display_name}')
     logging.debug(f'Last login: {current_user.last_login}')
-    print(f'Last login: {current_user.last_login.strftime('%a %b %d %H:%M:%S %Y')}')
+    print(f'Last login: {current_user.last_login.strftime('%a %b %d %H:%M:%S %Y')} from 192.168.1.1')
 
     try:
         friends = get_online_friends(auth_api, current_user)
@@ -45,7 +45,7 @@ def main():
         print(f'Failed to get online friends: {e}')
         return False
 
-    #delete if file friends-status.txt exists
+    # delete if file friends-status.txt exists
     logging.debug('Removing file friends-status.txt if it exists...')
     try:
         os.remove('friends-status.txt')
@@ -68,16 +68,16 @@ def main():
             print(friend_world_statuses)
             try:
                 instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
-                                            instance_id=friend.location)
+                                                instance_id=friend.location)
             except Exception as e:
                 print(f'Failed to get instance obj: {e}')
                 continue
             friend_instance_statuses = f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}'
             print(friend_instance_statuses)
             with open('friends-status.txt', 'a') as f:
-                f.write(friend_statuses +'\n')
-                f.write(friend_world_statuses +'\n')
-                f.write(friend_instance_statuses +'\n')
+                f.write(friend_statuses + '\n')
+                f.write(friend_world_statuses + '\n')
+                f.write(friend_instance_statuses + '\n')
 
             # print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
     wait1min()
