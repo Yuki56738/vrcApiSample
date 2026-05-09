@@ -1,4 +1,5 @@
 import json
+import os
 from time import sleep
 
 import vrchatapi
@@ -12,11 +13,24 @@ from vrchatapi.api import authentication_api
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[
-                        logging.StreamHandler(),
-                        logging.FileHandler('api.log'),
-                    ])
+isDebugEnv = os.getenv('VRCAPI_DEBUG')
+
+isDebug = False
+
+if isDebugEnv == '0':
+    isDebug = True
+
+if isDebug:
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        handlers=[
+                            logging.StreamHandler(),
+                            logging.FileHandler('api.log'),
+                        ])
+else:
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        handlers=[
+                            logging.FileHandler('api.log'),
+                        ])
 logging.getLogger('urllib3').setLevel(logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
 logging.getLogger('requests').setLevel(logging.DEBUG)
