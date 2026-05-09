@@ -39,13 +39,14 @@ def main():
     friends = get_online_friends(auth_api, current_user)
     for friend in friends:
         friend: LimitedUserFriend
-        if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline':
+        if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
             print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
             world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
             print(f'in {world_obj.name}, {world_obj.tags}')
             instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
                                             instance_id=friend.location)
             print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+    wait1min()
 
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
