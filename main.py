@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from vrchatapi import api_client
 from auth_to_vrc import *
@@ -11,7 +12,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[
-                        logging.FileHandler('app.log'),
+                        # logging.FileHandler('app.log'),
                     ])
 logging.getLogger('urllib3').setLevel(logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.DEBUG)
@@ -36,16 +37,47 @@ def main():
         print("Logged in as:", current_user.display_name)
     api_client = auth_api.api_client
 
-    friends = get_online_friends(auth_api, current_user)
+    try:
+        friends = get_online_friends(auth_api, current_user)
+    except Exception as e:
+        print(f'Failed to get online friends: {e}')
+        return False
+
+    #delete if file friends-status.txt exists
+    logging.debug('Removing file friends-status.txt if it exists...')
+    try:
+        os.remove('friends-status.txt')
+    except Exception as e:
+        print(f'Failed to remove file friends-status.txt: {e}')
+        pass
     for friend in friends:
         friend: LimitedUserFriend
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
-            print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
-            world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
-            print(f'in {world_obj.name}, {world_obj.tags}')
-            instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
+            friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
+            # print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
+            print(friend_statuses)
+            try:
+                world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
+            except Exception as e:
+                print(f'Failed to get world obj: {e}')
+                continue
+            friend_world_statuses = f'in {world_obj.name}, {world_obj.tags}'
+            # print(f'in {world_obj.name}, {world_obj.tags}')
+            print(friend_world_statuses)
+            try:
+                instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
                                             instance_id=friend.location)
-            print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+            except Exception as e:
+                print(f'Failed to get instance obj: {e}')
+                continue
+            friend_instance_statuses = f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}'
+            print(friend_instance_statuses)
+            with open('friends-status.txt', 'a') as f:
+                f.write(friend_statuses +'\n')
+                f.write(friend_world_statuses +'\n')
+                f.write(friend_instance_statuses +'\n')
+
+            # print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
     wait1min()
 
 
