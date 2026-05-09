@@ -27,7 +27,7 @@ def main():
     logging.info('Logging into VRChat API...')
     auth_api = AuthWithSavedCookie()
     auth_api.user_agent = API_USER_AGENT
-    current_user = auth_api.get_current_user()
+    current_user:CurrentUser = auth_api.get_current_user()
     if not current_user:
         logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
         auth_api = authAndStoreCookie()
@@ -36,6 +36,8 @@ def main():
         current_user = auth_api.get_current_user()
         print("Logged in as:", current_user.display_name)
     api_client = auth_api.api_client
+    logging.debug(f'Last login: {current_user.last_login}')
+    print(f'Last login: {current_user.last_login.strftime('%a %b %d %H:%M:%S %Y')}')
 
     try:
         friends = get_online_friends(auth_api, current_user)
