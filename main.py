@@ -52,6 +52,7 @@ def main():
     except Exception as e:
         print(f'Failed to remove file friends-status.txt: {e}')
         pass
+    friendStatusesDict = {}
     for friend in friends:
         friend: LimitedUserFriend
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
@@ -80,7 +81,10 @@ def main():
                 f.write(friend_instance_statuses + '\n')
 
             # print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+
     wait1min()
+
+
 
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
