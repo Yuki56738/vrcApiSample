@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import os
 
 from vrchatapi import api_client
@@ -50,13 +51,14 @@ def main():
     try:
         os.remove('friends-status.txt')
     except Exception as e:
-        print(f'Failed to remove file friends-status.txt: {e}')
+        logging.debug(f'Failed to remove file friends-status.txt: {e}')
         pass
     friendStatusesDict = {}
     for friend in friends:
         friend: LimitedUserFriend
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
-            friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
+            friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}}'
+            friendLastLogin: datetime= friend.last_login
             # print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
             print(friend_statuses)
             try:
