@@ -64,20 +64,32 @@ def main():
     except Exception as e:
         logging.debug(f'Failed to remove file friends-status.txt: {e}')
         pass
+
+    #dict to write to file
     friendStatusesDict = {}
+
+    #for for get friend object
     for friend in friends:
+        #define friend type
         friend: LimitedUserFriend
+
+        #exclude offline and private
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
             friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
+
             friendLastLogin: datetime= friend.last_login
+
             print(friend_statuses)
+
             try:
                 world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
             except Exception as e:
                 print(f'Failed to get world obj: {e}')
                 continue
+
+
             friend_world_statuses = f'in {world_obj.name}, {world_obj.tags}'
-            # print(f'in {world_obj.name}, {world_obj.tags}')
+
             print(friend_world_statuses)
             try:
                 instance_obj = get_instance_obj(api_client=api_client, current_user=current_user,
@@ -85,6 +97,8 @@ def main():
             except Exception as e:
                 print(f'Failed to get instance obj: {e}')
                 continue
+
+
             friend_instance_statuses = f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}'
             print(friend_instance_statuses)
             with open('friends-status.txt', 'a') as f:
