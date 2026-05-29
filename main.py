@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import os
 
 from vrchatapi import api_client
@@ -22,11 +23,18 @@ API_USER_AGENT = "VrcApiAppForMe/0.1 contact@yukiito.dev"
 
 
 def main():
+    #greeting run this script
     print('Welcome to the UNDERGROUND...')
     logging.info('Logging into VRChat API...')
+
+    #try to login to VRC
     auth_api = AuthWithSavedCookie()
     auth_api.user_agent = API_USER_AGENT
+
+    #get currentUser Object
     current_user: CurrentUser = auth_api.get_current_user()
+
+    #warn if falied to login
     if not current_user:
         logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
         auth_api = authAndStoreCookie()
@@ -34,11 +42,15 @@ def main():
 
         current_user = auth_api.get_current_user()
 
+    #get and/or define api_client
     api_client = auth_api.api_client
+
+    #greeting success login
     print(f'Logged in as: {current_user.display_name}')
     logging.debug(f'Last login: {current_user.last_login}')
     print(f'Last login: {current_user.last_login.strftime('%a %b %d %H:%M:%S %Y')} from 192.168.1.1')
 
+    #fetch my friends
     try:
         friends = get_online_friends(auth_api, current_user)
     except Exception as e:
@@ -50,13 +62,14 @@ def main():
     try:
         os.remove('friends-status.txt')
     except Exception as e:
-        print(f'Failed to remove file friends-status.txt: {e}')
+        logging.debug(f'Failed to remove file friends-status.txt: {e}')
         pass
+    friendStatusesDict = {}
     for friend in friends:
         friend: LimitedUserFriend
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
             friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
-            # print(f'{friend.status}, {friend.status_description}, {friend.display_name}')
+            friendLastLogin: datetime= friend.last_login
             print(friend_statuses)
             try:
                 world_obj = get_world_obj(api_client=api_client, current_user=current_user, world_id=friend.location)
@@ -78,9 +91,16 @@ def main():
                 f.write(friend_statuses + '\n')
                 f.write(friend_world_statuses + '\n')
                 f.write(friend_instance_statuses + '\n')
+            friendStatusesDict['friendStatuses'] = friend_statuses
+            friendStatusesDict['friendLastlogin'] = friendLastLogin
+            friendStatusesDict['friendWorldStatuses'] = friend_world_statuses
+            friendStatusesDict['friendInstanceStatuses'] = friend_instance_statuses
 
-            # print(f'instance: {instance_obj.display_name}, private: {instance_obj.private}, {instance_obj.type}')
+
+
     wait1min()
+
+
 
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
