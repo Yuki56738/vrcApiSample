@@ -87,7 +87,6 @@ def main():
                 print(f'Failed to get world obj: {e}')
                 continue
 
-
             friend_world_statuses = f'in {world_obj.name}, {world_obj.tags}'
 
             print(friend_world_statuses)
@@ -109,12 +108,7 @@ def main():
             friendStatusesDict['friendLastlogin'] = friendLastLogin
             friendStatusesDict['friendWorldStatuses'] = friend_world_statuses
             friendStatusesDict['friendInstanceStatuses'] = friend_instance_statuses
-
-
-
     wait1min()
-
-
 
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
@@ -159,10 +153,8 @@ def get_online_friends(auth_api: AuthenticationApi, current_user: CurrentUser):
         current_user.user_agent = API_USER_AGENT
 
         api_client = auth_api.api_client
-        # api_client.user_agent = API_USER_AGENT
         api_client.user_agent = API_USER_AGENT
         friends_api = FriendsApi(api_client)
-        # friends = friends_api.get_friends()
         friends = friends_api.get_friends(offline=False)
         logging.info('writing friends to file friends-online.txt...')
         with open('friends-online.txt', 'w') as f:
