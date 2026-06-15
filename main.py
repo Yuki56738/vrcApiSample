@@ -75,6 +75,7 @@ def main():
 
         #exclude offline and private
         if not friend.platform == 'web' and not friend.location == 'private' and not friend.location == 'offline' and not friend.location == 'traveling':
+            # print(f'friend obj: {get_user_obj(api_client=api_client, user_id=friend.id)}')
             friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
 
             friendLastLogin: datetime= friend.last_login
