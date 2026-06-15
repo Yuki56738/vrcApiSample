@@ -13,11 +13,11 @@ from vrchatapi.api import authentication_api
 
 import logging
 
-isDebugEnv = os.getenv('VRCAPI_DEBUG')
+isDebugEnv = os.getenv('VRCAPIAPPFORME_DEBUG')
 
 isDebug = False
 
-if isDebugEnv == '0':
+if isDebugEnv == '1':
     isDebug = True
 
 if isDebug:
