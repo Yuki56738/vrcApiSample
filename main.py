@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import os
+from datetime import timedelta
 
 from vrchatapi import api_client
 from auth_to_vrc import *
@@ -78,7 +79,8 @@ def main():
             # print(f'friend obj: {get_user_obj(api_client=api_client, user_id=friend.id)}')
             friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
 
-            friendLastLogin: datetime= friend.last_login
+
+            print(f'***friendLastlogin: {friend.last_login.now(timedelta(hours=-9))}***')
 
             print(friend_statuses)
 
@@ -111,6 +113,8 @@ def main():
             friendStatusesDict['friendInstanceStatuses'] = friend_instance_statuses
     wait1min()
 
+def my_status_msg_to_afk:
+    pass
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
     logging.debug('Getting user obj...')
