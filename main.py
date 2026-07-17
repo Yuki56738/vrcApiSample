@@ -119,7 +119,7 @@ def main():
 def my_status_msg_to_afk(api_client: ApiClient , currentuser: CurrentUser):
     # try:
     #     logging.info('Setting my status message to AFK...')
-    #     users_api: UsersApi = UsersApi(api_client)
+    users_api: UsersApi = UsersApi(api_client)
     #     user_obj = users_api.get_user(user_id=currentuser.id)
     #     user_obj.status_description = 'AFK'
     #     users_api.update_user(user_id=currentuser.id, user=user_obj)
@@ -130,6 +130,9 @@ def my_status_msg_to_afk(api_client: ApiClient , currentuser: CurrentUser):
     logging.info('setting my status message to afk...')
     try:
         myself_user_obj = get_user_obj(api_client, currentuser.id)
+        myself_user_obj.status_description = 'AFK'
+        users_api.update_user(user_id=currentuser.id, user=myself_user_obj)
+
     except Exception as e:
         logging.debug(f'failed to get myself user object: {e}')
         return False
