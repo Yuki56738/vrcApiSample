@@ -127,7 +127,12 @@ def my_status_msg_to_afk(api_client: ApiClient , currentuser: CurrentUser):
     #     logging.info('My status message set to AFK.')
     # except Exception as e:
     #     logging.debug(f'Failed to set my status message to AFK: {e}')
-    pass
+    logging.info('setting my status message to afk...')
+    try:
+        myself_user_obj = get_user_obj(api_client, currentuser.id)
+    except Exception as e:
+        logging.debug(f'failed to get myself user object: {e}')
+        return False
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
     logging.debug('Getting user obj...')
