@@ -30,6 +30,8 @@ def main():
 
     #try to login to VRC
     auth_api = AuthWithSavedCookie()
+    logging.warning(f'Failed to authenticate with saved cookie: {e}. Trying to new session...')
+    auth_api = authAndStoreCookie()
     global API_USER_AGENT
     auth_api.user_agent = API_USER_AGENT
 
@@ -37,12 +39,12 @@ def main():
     current_user: CurrentUser = auth_api.get_current_user()
 
     #warn if falied to login
-    if not current_user:
-        logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
-        auth_api = authAndStoreCookie()
-        auth_api.user_agent = API_USER_AGENT
-
-        current_user = auth_api.get_current_user()
+    # if not current_user:
+    #     logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
+    #     auth_api = authAndStoreCookie()
+    #     auth_api.user_agent = API_USER_AGENT
+    #
+    #     current_user = auth_api.get_current_user()
 
     #get and/or define api_client
     api_client = auth_api.api_client
