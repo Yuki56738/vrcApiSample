@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import os
+from datetime import timedelta
 
 from vrchatapi import api_client
 from auth_to_vrc import *
@@ -29,18 +30,21 @@ def main():
 
     #try to login to VRC
     auth_api = AuthWithSavedCookie()
+    if auth_api == False:
+        auth_api = authAndStoreCookie()
+    global API_USER_AGENT
     auth_api.user_agent = API_USER_AGENT
 
     #get currentUser Object
     current_user: CurrentUser = auth_api.get_current_user()
 
     #warn if falied to login
-    if not current_user:
-        logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
-        auth_api = authAndStoreCookie()
-        auth_api.user_agent = API_USER_AGENT
-
-        current_user = auth_api.get_current_user()
+    # if not current_user:
+    #     logging.warning('Failed to authenticate with saved cookie. Trying to new session...')
+    #     auth_api = authAndStoreCookie()
+    #     auth_api.user_agent = API_USER_AGENT
+    #
+    #     current_user = auth_api.get_current_user()
 
     #get and/or define api_client
     api_client = auth_api.api_client
@@ -65,6 +69,9 @@ def main():
         logging.debug(f'Failed to remove file friends-status.txt: {e}')
         pass
 
+    #print result of set status to AFK over VRC API
+    my_status_msg_to_afk(api_client, current_user)
+
     #dict to write to file
     friendStatusesDict = {}
 
@@ -78,7 +85,8 @@ def main():
             # print(f'friend obj: {get_user_obj(api_client=api_client, user_id=friend.id)}')
             friend_statuses = f'{friend.status}, {friend.status_description}, {friend.display_name}'
 
-            friendLastLogin: datetime= friend.last_login
+
+            # print(f'***friendLastlogin: {friend.last_login.now(timedelta(hours=-9))}***')
 
             print(friend_statuses)
 
@@ -106,11 +114,31 @@ def main():
                 f.write(friend_world_statuses + '\n')
                 f.write(friend_instance_statuses + '\n')
             friendStatusesDict['friendStatuses'] = friend_statuses
-            friendStatusesDict['friendLastlogin'] = friendLastLogin
+            # friendStatusesDict['friendLastlogin'] = friendLastLogin
             friendStatusesDict['friendWorldStatuses'] = friend_world_statuses
             friendStatusesDict['friendInstanceStatuses'] = friend_instance_statuses
     wait1min()
 
+def my_status_msg_to_afk(api_client: ApiClient , currentuser: CurrentUser):
+    # try:
+    #     logging.info('Setting my status message to AFK...')
+    users_api: UsersApi = UsersApi(api_client)
+    #     user_obj = users_api.get_user(user_id=currentuser.id)
+    #     user_obj.status_description = 'AFK'
+    #     users_api.update_user(user_id=currentuser.id, user=user_obj)
+    #
+    #     logging.info('My status message set to AFK.')
+    # except Exception as e:
+    #     logging.debug(f'Failed to set my status message to AFK: {e}')
+    logging.info('setting my status message to afk...')
+    try:
+        myself_user_obj = get_user_obj(api_client, currentuser.id)
+        myself_user_obj.status_description = 'AFK'
+        users_api.update_user(user_id=currentuser.id, user=myself_user_obj)
+
+    except Exception as e:
+        logging.debug(f'failed to get myself user object: {e}')
+        return False
 
 def get_user_obj(api_client: ApiClient, user_id: str) -> User:
     logging.debug('Getting user obj...')
