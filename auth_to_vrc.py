@@ -44,11 +44,14 @@ API_USER_AGENT = "VrcApiAppForMe/0.1 contact@yukiito.dev"
 
 def initializeCredentials(CREDS_FILE: str):
     global VRC_USERNAME, VRC_PASSWORD
-
-    with open(CREDS_FILE, "r") as f:
-        CREDS = json.loads(f.read())
-        VRC_USERNAME = CREDS["VRC_USERNAME"]
-        VRC_PASSWORD = CREDS["VRC_PASSWORD"]
+    try:
+        with open(CREDS_FILE, "r") as f:
+            CREDS = json.loads(f.read())
+            VRC_USERNAME = CREDS["VRC_USERNAME"]
+            VRC_PASSWORD = CREDS["VRC_PASSWORD"]
+    except FileNotFoundError:
+        logging.warning(f'credentials.json not found')
+        return False
 
 
 def authAndStoreCookie():
