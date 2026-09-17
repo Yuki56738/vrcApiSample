@@ -9,6 +9,7 @@
       <env name="VRCAPIAPPFORME_DEBUG" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
+    <option name="SDK_NAME" value="Pipenv (vrcApiTest) (2)" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -16,6 +17,7 @@
     <option name="DEBUG_JUST_MY_CODE" value="false" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="RUN_TOOL" value="" />
+    <option name="RUN_AS_SCRIPT" value="false" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
