@@ -119,7 +119,7 @@ def AuthWithSavedCookie():
             cookies_to_saved.update(json.JSONDecoder().decode(f.read()))
     except FileNotFoundError:
         logging.error('cookies.json not found')
-        return False
+        pass
     logging.info('authenticating with saved cookies...')
     with vrchatapi.ApiClient(configuration) as api_client:
         try:
