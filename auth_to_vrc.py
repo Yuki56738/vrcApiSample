@@ -51,7 +51,6 @@ def initializeCredentials(CREDS_FILE: str):
             VRC_PASSWORD = CREDS["VRC_PASSWORD"]
     except FileNotFoundError:
         logging.warning(f'credentials.json not found')
-        return False
 
 
 def authAndStoreCookie():
