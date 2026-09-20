@@ -30,7 +30,7 @@ def main():
 
     #try to login to VRC
     auth_api = AuthWithSavedCookie()
-    if auth_api == False:
+    if not auth_api:
         auth_api = authAndStoreCookie()
     global API_USER_AGENT
     auth_api.user_agent = API_USER_AGENT
