@@ -48,7 +48,6 @@ def main():
 
     #get and/or define api_client
     api_client = auth_api.api_client
-
     #greeting success login
     print(f'Logged in as: {current_user.display_name}')
     logging.debug(f'Last login: {current_user.last_login}')
