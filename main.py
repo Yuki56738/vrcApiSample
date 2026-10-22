@@ -53,6 +53,8 @@ def main():
     logging.debug(f'Last login: {current_user.last_login}')
     print(f'Last login: {current_user.last_login.strftime('%a %b %d %H:%M:%S %Y')} from 192.168.1.1')
 
+    # my_location = get_instance_obj(api_client=api_client, current_user=current_user, instance_id=current_user.location)
+    # print(f'my location: {my_location}')
     #fetch my friends
     try:
         friends = get_online_friends(auth_api, current_user)
@@ -69,7 +71,7 @@ def main():
         pass
 
     #print result of set status to AFK over VRC API
-    my_status_msg_to_afk(api_client, current_user)
+    # my_status_msg_to_afk(api_client, current_user)
 
     #dict to write to file
     friendStatusesDict = {}
