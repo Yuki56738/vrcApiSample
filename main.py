@@ -101,7 +101,7 @@ def main():
                 print(f'Failed to get world obj: {e}')
                 continue
 
-            friend_world_statuses = f'in {world_obj.name}, {world_obj.tags}'
+            friend_world_statuses = f'   in {world_obj.name}, {world_obj.tags}'
 
             print(friend_world_statuses)
             try:
