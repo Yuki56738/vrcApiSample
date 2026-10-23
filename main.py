@@ -55,6 +55,10 @@ def main():
 
     # my_location = get_instance_obj(api_client=api_client, current_user=current_user, instance_id=current_user.location)
     # print(f'my location: {my_location}')
+
+    #get myself data
+    print(f'my status_description: {current_user.status}')
+
     #fetch my friends
     try:
         friends = get_online_friends(auth_api, current_user)
